@@ -11,14 +11,14 @@ export default {
 				headers,
 			})
 			.catch(error => {
-				console.error(error);
+				return Promise.reject(error);
 			});
 	},
 	post(url, body = {}, config = {}, errorNotify = true) {
 		return axios
 			.post(API_ENDPOINT + url, body, { header: config })
 			.catch(error => {
-				console.error(error);
+				return Promise.reject(error);
 			});
 	},
 };

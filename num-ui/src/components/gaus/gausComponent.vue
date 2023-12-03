@@ -13,7 +13,7 @@
 						</v-chip-group>
 					</v-col>
 				</v-row>
-				<v-row justify="left" align="center">
+				<v-row justify="start" align="center">
 					<span class="text-h5">A =</span>
 					<v-col cols="4">
 						<v-row v-for="(row, rowIndex) in matrix" :key="rowIndex">
@@ -31,7 +31,7 @@
 							</v-col>
 						</v-row>
 					</v-col>
-					<v-row justify="left" align="center" class="pl-10">
+					<v-row justify="start" align="center" class="pl-10">
 						<span class="text-h5">b =</span>
 						<v-col cols="6">
 							<v-row v-for="(row, rowIndex) in matrixB" :key="rowIndex">
@@ -70,7 +70,7 @@
 			</v-row>
 			<div v-if="result">
 				<v-divider class="mt-5"></v-divider>
-				<v-row justify="left" align="center" class="mt-4 mb-1 mx-3">
+				<v-row justify="start" align="center" class="mt-4 mb-1 mx-3">
 					<span class="text-h5">Result: </span>
 					<span class="ml-3">
 						{{ result }}
@@ -91,7 +91,7 @@ export default {
 			matrixSize: 3,
 			matrixSizes: [2, 3, 4, 5],
 			matrixData: this.initializeMatrixData(3),
-			matrixB: Array.from({ length: 3 }, () => Array(1).fill()), // Initialize with numeric values
+			matrixB: Array.from({ length: 3 }, () => Array(1).fill('')), // Initialize with numeric values
 			result: '',
 		};
 	},
@@ -99,7 +99,7 @@ export default {
 		matrixSize(e) {
 			this.matrixData = this.initializeMatrixData(e);
 			this.matrixB = Array.from({ length: this.matrixSize }, () =>
-				Array(1).fill()
+				Array(1).fill('')
 			);
 		},
 	},
@@ -123,11 +123,11 @@ export default {
 			this.result = '';
 		},
 		initializeMatrixData(size) {
-			return Array.from({ length: size }, () => Array(size).fill());
+			return Array.from({ length: size }, () => Array(size).fill(''));
 		},
 		addRow() {
-			this.matrix.push(Array(this.matrixSize).fill());
-			this.matrixB.push(Array(1).fill());
+			this.matrix.push(Array(this.matrixSize).fill(''));
+			this.matrixB.push(Array(1).fill(''));
 			this.matrix.forEach(row => row.push());
 			this.matrixSize++;
 		},
@@ -151,9 +151,8 @@ export default {
 					b: this.matrixB.map(Number),
 				});
 			} catch (e) {
-				alert(e)
+				this.result = e.response.data.detail;
 			}
-			// Handle the matrix data as needed
 		},
 	},
 };
