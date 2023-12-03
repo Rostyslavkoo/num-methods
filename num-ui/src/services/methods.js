@@ -14,4 +14,8 @@ export default {
 		const response = await requestService.post('least-squares', payload);
 		return response?.data;
 	},
+	async chord(payload) {
+		const response = await requestService.post('chord', payload);
+		return response?.data;
+	},
 };

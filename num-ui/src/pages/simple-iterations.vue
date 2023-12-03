@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import SimpleIterationsComponent from '../components/gaus/simple-iterations/simpleIterationsComponent.vue';
+import SimpleIterationsComponent from '../components/simple-iterations/simpleIterationsComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
 
 export default {

@@ -1,16 +1,15 @@
 <template>
-	<layout-component><gaus-component /></layout-component>
+	<layout-component><chord-component></chord-component></layout-component>
 </template>
 
 <script>
-import GausComponent from '../components/gaus/gausComponent.vue';
+import ChordComponent from '../components/chord/chordComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
 
 export default {
-	components: { layoutComponent, GausComponent },
+	components: { layoutComponent,  ChordComponent },
 };
 
-GausComponent;
 </script>
 
 <style></style>

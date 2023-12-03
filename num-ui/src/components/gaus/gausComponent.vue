@@ -65,7 +65,7 @@
 					</v-btn>
 				</v-col>
 				<v-col cols="3">
-					<v-btn btn @click="submitMatrix" color="primary">Submit Matrix</v-btn>
+					<v-btn btn @click="submitMatrix" :loading="loading" color="primary">Submit Matrix</v-btn>
 				</v-col>
 			</v-row>
 			<div v-if="result">
@@ -93,6 +93,7 @@ export default {
 			matrixData: this.initializeMatrixData(3),
 			matrixB: Array.from({ length: 3 }, () => Array(1).fill('')), // Initialize with numeric values
 			result: '',
+			loading:false
 		};
 	},
 	watch: {
@@ -146,12 +147,16 @@ export default {
 
 		async submitMatrix() {
 			try {
+				this.loading = true
 				this.result = await methods.gauss({
 					A: this.matrix.map(row => row.map(Number)),
 					b: this.matrixB.map(Number),
 				});
 			} catch (e) {
 				this.result = e?.response?.data?.detail;
+			}
+			finally{
+				this.loading = false
 			}
 		},
 	},

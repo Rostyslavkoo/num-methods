@@ -70,7 +70,7 @@
 					</v-btn>
 				</v-col>
 				<v-col cols="3">
-					<v-btn btn @click="submitMatrix" color="primary">Submit Matrix</v-btn>
+					<v-btn btn @click="submitMatrix" :loading="loading" color="primary">Submit Matrix</v-btn>
 				</v-col>
 			</v-row>
 			<div v-if="result">
@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import methods from './../../../services/methods';
+import methods from './../../services/methods';
 
 export default {
 	data() {
@@ -96,6 +96,7 @@ export default {
 			matrixB: Array.from({ length: 3 }, () => Array(1).fill('')),
 			result: '',
 			rowSize: 3,
+			loading:false
 		};
 	},
 	computed: {
@@ -147,12 +148,16 @@ export default {
 		},
 		async submitMatrix() {
 			try {
+				this.loading = true
 				this.result = await methods.simpleItarations({
 					A: this.matrix.map(row => row.map(Number)),
 					b: this.matrixB.map(Number),
 				});
 			} catch (e) {
 				this.result = e?.response?.data?.detail;
+			}
+			finally{
+				this.loading = false
 			}
 		},
 	},

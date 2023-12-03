@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import LeastSquaresComponent from '../components/gaus/leastSquares/leastSquaresComponent.vue';
+import LeastSquaresComponent from '../components/leastSquares/leastSquaresComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
 
 export default {

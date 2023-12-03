@@ -1,7 +1,7 @@
-from typing import Union
+from typing import Union,List
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
-
+import sympy as sp
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -159,7 +159,11 @@ def solve_least_squares_for_system(item: Item):
                 for k in range(size):
                     matrix_transpose_by_matrix[i][j] += matrix_transpose[i][k] * matrix[k][j]
 
-        matrix_transpose_by_matrix_invertible = invertible_matrix(matrix_transpose_by_matrix)
+        for i in range(size2):
+            if matrix_transpose_by_matrix[i][i] != 0:
+                matrix_transpose_by_matrix_invertible = invertible_matrix(matrix_transpose_by_matrix)
+            else:
+                raise HTTPException(status_code=400, detail="Matrix is not invertible")
 
         matrix_transpose_by_constants = [0 for _ in range(size2)]
         for i in range(size2):
@@ -176,4 +180,39 @@ def solve_least_squares_for_system(item: Item):
         return result
 
     except (ValueError, IndexError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+class ChordModel(BaseModel):
+    a: float
+    b:float
+    function:str
+
+
+@app.post("/chord/") 
+def solve_secant_method(chord:ChordModel):
+    a = chord.a
+    b = chord.b
+    function = chord.function
+
+    x = sp.symbols('x')
+    fx = sp.sympify(function)
+
+    def find_root(fx, a, b, eps):
+        c = (a * float(fx.subs(x, b)) - b * float(fx.subs(x, a))) / float((float(fx.subs(x, b)) - float(fx.subs(x, a))))
+        c1 = (a * float(fx.subs(x, b)) - b * float(fx.subs(x, a))) / float(
+            (float(fx.subs(x, b)) - float(fx.subs(x, a)))) + 1
+        while abs(float(c1) - float(c)) > eps:
+            if fx.subs(x, a) * fx.subs(x, c) > 0:
+                a = c
+            else:
+                b = c
+            c1 = c
+            c = (a * float(fx.subs(x, b)) - b * float(fx.subs(x, a))) / float(
+                (float(fx.subs(x, b)) - float(fx.subs(x, a))))
+        return c
+
+    try:
+        root = find_root(fx, a, b, 0.0001)
+        return round(root, 5)
+    except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
