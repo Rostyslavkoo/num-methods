@@ -1,28 +1,35 @@
 <template>
 	<v-card>
-		<v-card-title> Chord method </v-card-title>
+		<v-card-title> Newton method </v-card-title>
 		<v-divider class="mx-3"></v-divider>
 		<v-card-text>
 			<v-sheet height="100" class="pl-1">
 				<v-row>
-					<v-col cols="5">
+					<v-col cols="4">
 						<v-text-field
 							v-model="functionQuery"
 							label="function"
 							density="compact"
 						></v-text-field>
 					</v-col>
-					<v-col cols="2">
+					<v-col cols="1">
 						<v-text-field
 							v-model="aQuery"
 							label="a"
 							density="compact"
 						></v-text-field>
 					</v-col>
-					<v-col cols="2">
+					<v-col cols="1">
 						<v-text-field
 							v-model="bQuery"
 							label="b"
+							density="compact"
+						></v-text-field>
+					</v-col>
+					<v-col cols="1">
+						<v-text-field
+							v-model="nQuery"
+							label="n"
 							density="compact"
 						></v-text-field>
 					</v-col>
@@ -39,8 +46,8 @@
 						btn
 						@click="submitMatrix"
 						color="primary"
-						:disabled="!functionQuery || !aQuery || !bQuery"
-                        :loading="loading"
+						:disabled="!functionQuery || !aQuery || !bQuery || !nQuery"
+						:loading="loading"
 						>Submit Matrix</v-btn
 					>
 				</v-col>
@@ -62,35 +69,37 @@ import methods from './../../services/methods';
 export default {
 	data() {
 		return {
-			functionQuery: '',
-			aQuery: '',
-			bQuery: '',
+			functionQuery: 'x**3-13*x-1',
+            aQuery:'',
+            bQuery:'',
+            nQuery:'',
 			result: undefined,
-            loading:false
+			loading: false,
 		};
 	},
 
 	methods: {
-        clearMatrix(){
-            this.functionQuery = ''
+		clearMatrix() {
+			this.functionQuery = '';
+			this.result = undefined;
             this.aQuery = ''
             this.bQuery = ''
-            this.result = undefined
-
-        },  
+            this.nQuery = ''
+		},
 		async submitMatrix() {
 			try {
-                this.loading = true
-				this.result = await methods.chord({
-					a: this.aQuery,
-					b: this.bQuery,
+				this.loading = true;
+				this.result = await methods.integral({
 					function: this.functionQuery,
+                    a:this.aQuery,
+                    b:this.bQuery,
+                    n:this.nQuery,
 				});
 			} catch (e) {
 				this.result = e?.response?.data?.detail;
-			}finally{
-                this.loading = false
-            }
+			} finally {
+				this.loading = false;
+			}
 		},
 	},
 };

@@ -214,6 +214,8 @@ def solve_secant_method(chord:ChordModel):
     try:
         root = find_root(fx, a, b, 0.0001)
         return round(root, 5)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -248,6 +250,8 @@ def solve_newton(NewtonMethodInput:NewtonMethodInput):
     try:
         root = find_root(fx, a, b, 0.0001)
         return round(root, 5)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -273,6 +277,8 @@ async def newton_interpolation(NewtonInter:NewtonInter):
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 class Lagrange(BaseModel):
     matrix: list
     x:int
@@ -292,6 +298,44 @@ async def lagrange_polynomial(Lagrange:Lagrange):
             result += temp * float(points[i][1])
         
         return result
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+class Integral(BaseModel):
+    a:int
+    b:int
+    n:int
+    function:str
+
+ 
+@app.post("/integral")
+async def solve_integral(Integral:Integral):
+    try:
+        a = Integral.a
+        b = Integral.b
+        n = Integral.n
+        function = Integral.function
+        x = sp.symbols('x')
+        fun = sp.lambdify(x, sp.sympify(function), 'numpy')
+
+        # solve using rectangles
+        h = (b - a) / n
+        result_rectangles = sum(fun(i) for i in np.linspace(a, b, n)) * h
+
+        # solve using trapezium
+        result_trapezium = sum((fun(i) + fun(i + ((a + b) / n))) / 2 for i in np.linspace(a, b, n)) * h
+
+        # solve using Simpson's rule
+        result_simpsons = sum((fun(i) + 4 * fun(i + ((a + b) / n) / 2) + fun(i + ((a + b) / n))) / 6 for i in np.linspace(a, b, n)) * h
+
+        return {
+            "result_rectangles": round(result_rectangles, 5),
+            "result_trapezium": round(result_trapezium, 5),
+            "result_simpsons": round(result_simpsons, 5),
+        }
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))

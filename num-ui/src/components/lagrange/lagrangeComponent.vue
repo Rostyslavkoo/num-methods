@@ -63,7 +63,7 @@
 					<v-btn btn @click="submitMatrix" :loading="loading" color="primary">Submit Matrix</v-btn>
 				</v-col>
 			</v-row>
-			<div v-if="result !== null ">
+			<div v-if="result !== undefined ">
 				<v-divider class="mt-5"></v-divider>
 				<v-row justify="start" align="center" class="mt-4 mb-1 mx-3">
 					<span class="text-h5">Result: </span>
@@ -82,7 +82,7 @@ export default {
 		return {
 			matrixSize: 2,
 			matrixData: this.initializeMatrixData(2),
-			result: null,
+			result: undefined,
 			rowSize: 3,
 			loading:false,
             xQuery:'',

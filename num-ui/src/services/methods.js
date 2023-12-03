@@ -30,4 +30,8 @@ export default {
 		const response = await requestService.post('lagrange', payload);
 		return response?.data;
 	},
+	async integral(payload) {
+		const response = await requestService.post('integral', payload);
+		return response?.data;
+	},
 };

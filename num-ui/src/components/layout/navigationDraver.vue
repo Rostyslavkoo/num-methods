@@ -46,7 +46,7 @@ export default {
 	data: () => ({
 		METHODS_ALL: METHODS_ALL,
 		TOPICS: TOPICS,
-		group: null,
+		group: undefined,
 		AppVersion: version,
 	}),
 	computed: {},

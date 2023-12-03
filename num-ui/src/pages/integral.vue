@@ -1,16 +1,15 @@
 <template>
-	<layout-component><gaus-component /></layout-component>
+	<layout-component><integral-component></integral-component></layout-component>
 </template>
 
 <script>
-import GausComponent from '../components/gaus/gausComponent.vue';
+import IntegralComponent from '../components/integral/integralComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
 
 export default {
-	components: { layoutComponent, GausComponent },
+	components: { layoutComponent, IntegralComponent },
 };
 
-GausComponent;
 </script>
 
 <style></style>
