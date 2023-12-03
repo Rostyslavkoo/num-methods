@@ -1,16 +1,16 @@
 <template>
-	<layout-component><gaus-component /></layout-component>
+	<layout-component
+		><newton-intepolations-component></newton-intepolations-component
+	></layout-component>
 </template>
 
 <script>
-import GausComponent from '../components/gaus/gausComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
+import NewtonIntepolationsComponent from '../components/newtonIntepolations/newtonIntepolationsComponent.vue';
 
 export default {
-	components: { layoutComponent, GausComponent },
+	components: { layoutComponent, NewtonIntepolationsComponent },
 };
-
-GausComponent;
 </script>
 
 <style></style>

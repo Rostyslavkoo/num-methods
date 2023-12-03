@@ -251,3 +251,25 @@ def solve_newton(NewtonMethodInput:NewtonMethodInput):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+class NewtonInter(BaseModel):
+    matrix: list
+    x:int
+
+@app.post("/newton-inter/") 
+async def newton_interpolation(NewtonInter:NewtonInter):
+    try:
+        x = NewtonInter.x
+        D_matrix = NewtonInter.matrix
+        
+        result = 0
+        size = len(D_matrix)
+        for i in range(size):
+            temp = 1
+            for j in range(i):
+                temp *= (x - float(D_matrix[j][0]))
+            result += temp * D_matrix[i][1]
+
+        return result
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

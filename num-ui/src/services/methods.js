@@ -22,4 +22,8 @@ export default {
 		const response = await requestService.post('newton', payload);
 		return response?.data;
 	},
+	async newtonInter(payload) {
+		const response = await requestService.post('newton-inter', payload);
+		return response?.data;
+	},
 };
