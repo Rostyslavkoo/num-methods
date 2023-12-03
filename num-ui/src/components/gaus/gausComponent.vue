@@ -50,7 +50,7 @@
 			</v-sheet>
 			<v-row class="pl-9">
 				<v-col cols="auto">
-					<v-btn @click="addRow" color="success" :disabled="matrixSize >= 5">
+					<v-btn @click="addRow" color="primary" :disabled="matrixSize >= 5">
 						<v-icon>mdi-plus</v-icon>
 					</v-btn>
 				</v-col>
@@ -60,7 +60,7 @@
 					</v-btn>
 				</v-col>
 				<v-col cols="auto">
-					<v-btn @click="clearMatrix" color="red">
+					<v-btn @click="clearMatrix" color="grey">
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
 				</v-col>

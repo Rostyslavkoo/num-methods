@@ -1,24 +1,7 @@
-export const METHODS_TREE = {
-	LINEAR: {
-		GAUSS: 'Gauss',
-		SIMPLE_ITARATIONS: 'Simple iterations',
-		NEWTON_LINEAR: 'Newton',
-	},
-	NON_LINEAR: {
-		CHORD: 'Chord',
-		NEWTON_NON_LINEAR: 'Newton',
-	},
-	INTERPOLATIONS: {
-		NEWTON_INTERPOLATIONS: 'Newton',
-		LAGRANGE: 'Lagrange',
-	},
-	INTEGRATION: {
-		INTEGRAL: 'Integral',
-	},
-};
+
 export const TOPICS = {
-	LINEAR: 'Linear',
-	NON_LINEAR: 'Non Linear',
+	LINEAR: 'System of linear equations',
+	NON_LINEAR: 'Nonlinear equations',
 	INTERPOLATIONS: 'Interpolations',
 	INTEGRATION: 'Integrations',
 };

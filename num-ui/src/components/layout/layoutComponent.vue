@@ -1,6 +1,6 @@
 <template>
 	<v-layout>
-		<v-app-bar color="info" prominent>
+		<v-app-bar color="primary" prominent>
 			<v-app-bar-nav-icon
 				variant="text"
 				@click.stop="drawer = !drawer"
@@ -16,7 +16,7 @@
 			<v-btn variant="text" icon="mdi-dots-vertical"></v-btn>
 		</v-app-bar>
 
-		<navigation-draver :drawer="drawer"></navigation-draver>
+		<navigation-draver :drawer="drawer" ></navigation-draver>
 
 		<v-main>
 			<v-card-text>
@@ -40,4 +40,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.v-navigation-drawer .v-list{
+	padding: 0!important;
+}
+</style>

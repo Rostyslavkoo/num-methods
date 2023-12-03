@@ -1,15 +1,17 @@
 <template>
 	<v-navigation-drawer :model-value="drawer" permanent>
-		<v-list color="info">
+		<v-list color="primary" >
 			<div v-for="item in Object.keys(METHODS_ALL)" :key="item" :value="item">
-				<v-list-subheader v-if="'type' in METHODS_ALL[item]">{{
+				<v-list-subheader v-if="'type' in METHODS_ALL[item]" 	class="text-primary">{{
 					METHODS_ALL[item].type
 				}}</v-list-subheader>
 				<v-list-item
+			
+				
 					:to="{ path: `/${METHODS_ALL[item].text.split(' ').join('-')}` }"
 				>
 					<template v-slot:prepend>
-						<v-icon icon="mdi-math-integral"></v-icon>
+						<v-icon icon="mdi-sigma"></v-icon>
 					</template>
 
 					<v-list-item-title
@@ -35,7 +37,7 @@
 
 <script>
 import { version } from './../../../package.json';
-import { METHODS_TREE, TOPICS, METHODS_ALL } from './../../constants/methods';
+import {  TOPICS, METHODS_ALL } from './../../constants/methods';
 
 export default {
 	props: {

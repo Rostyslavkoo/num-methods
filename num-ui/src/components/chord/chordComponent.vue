@@ -30,7 +30,7 @@
 			</v-sheet>
 			<v-row class="">
 				<v-col cols="auto">
-					<v-btn @click="clearMatrix" color="red">
+					<v-btn @click="clearMatrix" color="grey">
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
 				</v-col>
