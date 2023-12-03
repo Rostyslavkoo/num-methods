@@ -1,16 +1,16 @@
 <template>
-	<layout-component><gaus-component /></layout-component>
+	<layout-component
+		><least-squares-component></least-squares-component
+	></layout-component>
 </template>
 
 <script>
-import GausComponent from '../components/gaus/gausComponent.vue';
+import LeastSquaresComponent from '../components/gaus/leastSquares/leastSquaresComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
 
 export default {
-	components: { layoutComponent, GausComponent },
+	components: { layoutComponent, LeastSquaresComponent },
 };
-
-GausComponent;
 </script>
 
 <style></style>

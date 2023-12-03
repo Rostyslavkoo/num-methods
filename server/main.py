@@ -20,6 +20,35 @@ class Item(BaseModel):
     A: list
     b:list
 
+def invertible_matrix(A):
+    n = len(A)
+    E = [[0 for _ in range(n)] for _ in range(n)]
+    for i in range(n):
+        E[i][i] = 1
+
+    for i in range(n):
+        max_row = i
+        for k in range(i + 1, n):
+            if abs(A[k][i]) > abs(A[max_row][i]):
+                max_row = k
+        A[i], A[max_row] = A[max_row], A[i]
+        E[i], E[max_row] = E[max_row], E[i]
+
+        pivot = A[i][i]
+        for k in range(i, n):
+            A[i][k] /= pivot
+        for k in range(n):
+            E[i][k] /= pivot
+
+        for k in range(n):
+            if k != i:
+                factor = A[k][i]
+                for j in range(i, n):
+                    A[k][j] -= factor * A[i][j]
+                for j in range(n):
+                    E[k][j] -= factor * E[i][j]
+
+    return E
 
 
 @app.post("/gauss/")
@@ -72,54 +101,79 @@ def gaussian_elimination(item: Item):
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
+        
 @app.post("/simple-iterations/") 
-def gaussian_elimination(item: Item):
+def solve_iteration_method(item: Item):
     try:
         A = item.A
         b = item.b
+        size = len(A)
+        n = len(A[0])
 
-        # Check for empty matrices
-        if not A or not b or not A[0]:
-            raise ValueError("Matrices must not be empty")
+        # Перевірка, чи вектор b має відповідну довжину
+        if len(b) != size:
+            raise ValueError("Invalid vector dimension")
 
-        n = len(A)
+        matrix = [[A[i][j] for j in range(n)] for i in range(size)]
+        constants = b.copy()
 
-        # Check for square matrix
-        if n != len(A[0]):
-            raise ValueError("Matrix A must be square")
+        x = [0] * n  # Початкове наближення
+        max_iterations = 1000  # Ліміт ітерацій, щоб уникнути безкінечного циклу
+        tolerance = 1e-6  # Точність
 
-        for i in range(n):
-            max_row = i
-            for k in range(i + 1, n):
-                if abs(A[k][i]) > abs(A[max_row][i]):
-                    max_row = k
-            A[i], A[max_row] = A[max_row], A[i]
-            b[i], b[max_row] = b[max_row], b[i]
+        for _ in range(max_iterations):
+            x_new = [0] * n
+            for i in range(size):
+                summation = sum(matrix[i][j] * x[j] for j in range(n))
+                x_new[i] = summation + constants[i]
 
-            pivot = A[i][i]
+            # Перевірка на збіжність
+            if all(abs(x_new[i] - x[i]) < tolerance for i in range(n)):
+                break
 
-            # Check for division by zero
-            if pivot == 0:
-                raise ValueError("Division by zero encountered")
+            x = x_new.copy()
 
-            for k in range(i, n):
-                A[i][k] /= pivot
-            b[i] /= pivot
+        x = [round(x[i], 4) for i in range(n)]
 
-            for k in range(n):
-                if k != i:
-                    factor = A[k][i]
-                    for j in range(i, n):
-                        A[k][j] -= factor * A[i][j]
-                    b[k] -= factor * b[i]
-
-            for i in range(n):
-                for j in range(n):
-                    A[i][j] = round(A[i][j], 3)
-                b[i] = round(b[i], 3)
-
-        return b
+        return x
 
     except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@app.post("/least-squares/") 
+def solve_least_squares_for_system(item: Item):
+    try:
+        A = item.A
+        b = item.b
+        size = len(A)
+        size2 = len(A[0])
+        
+        matrix = [[float(A[i][j]) for j in range(size2)] for i in range(size)]
+        constants = [float(b[i]) for i in range(size)]
+
+        matrix_transpose = [[matrix[j][i] for j in range(size)] for i in range(size2)]
+
+        matrix_transpose_by_matrix = [[0 for _ in range(size2)] for _ in range(size2)]
+        for i in range(size2):
+            for j in range(size2):
+                for k in range(size):
+                    matrix_transpose_by_matrix[i][j] += matrix_transpose[i][k] * matrix[k][j]
+
+        matrix_transpose_by_matrix_invertible = invertible_matrix(matrix_transpose_by_matrix)
+
+        matrix_transpose_by_constants = [0 for _ in range(size2)]
+        for i in range(size2):
+            for j in range(size):
+                matrix_transpose_by_constants[i] += matrix_transpose[i][j] * constants[j]
+
+        result = [0 for _ in range(size2)]
+        for i in range(size2):
+            for j in range(size2):
+                result[i] += matrix_transpose_by_matrix_invertible[i][j] * matrix_transpose_by_constants[j]
+
+        result = [round(result[i], 7) for i in range(size2)]
+
+        return result
+
+    except (ValueError, IndexError) as e:
         raise HTTPException(status_code=400, detail=str(e))
