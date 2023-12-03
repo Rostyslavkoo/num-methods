@@ -49,5 +49,6 @@ export const METHODS_ALL = {
 	},
 	INTEGRAL: {
 		text: 'integral',
+		type: TOPICS.INTEGRATION,
 	},
 };
