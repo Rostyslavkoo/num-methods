@@ -1,16 +1,16 @@
 <template>
-	<layout-component><gaus-component /></layout-component>
+	<layout-component
+		><simple-iterations-component></simple-iterations-component
+	></layout-component>
 </template>
 
 <script>
-import GausComponent from '../components/gaus/gausComponent.vue';
+import SimpleIterationsComponent from '../components/gaus/simple-iterations/simpleIterationsComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
 
 export default {
-	components: { layoutComponent, GausComponent },
+	components: { layoutComponent, SimpleIterationsComponent },
 };
-
-GausComponent;
 </script>
 
 <style></style>

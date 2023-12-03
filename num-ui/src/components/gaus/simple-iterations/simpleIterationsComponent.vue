@@ -1,18 +1,9 @@
 <template>
 	<v-card>
-		<v-card-title> Gauss method </v-card-title>
+		<v-card-title> Simple iterations method </v-card-title>
 		<v-divider class="mx-3"></v-divider>
 		<v-card-text>
-			<v-sheet :height="120 * matrixSize" class="pl-1">
-				<v-row>
-					<v-col cols="12" class="pl-5">
-						<v-chip-group v-model="matrixSize" color="primary" mandatory>
-							<v-chip v-for="size in matrixSizes" :key="size" :value="size">
-								{{ size }}x{{ size }}
-							</v-chip>
-						</v-chip-group>
-					</v-col>
-				</v-row>
+			<v-sheet :height="120 * rowSize" class="pl-1">
 				<v-row justify="start" align="center">
 					<span class="text-h5">A =</span>
 					<v-col cols="4">
@@ -50,13 +41,27 @@
 			</v-sheet>
 			<v-row class="pl-9">
 				<v-col cols="auto">
-					<v-btn @click="addRow" color="success" :disabled="matrixSize >= 5">
+					<v-btn @click="addRow" color="success" :disabled="rowSize >= 5">
 						<v-icon>mdi-plus</v-icon>
+						row
 					</v-btn>
 				</v-col>
 				<v-col cols="auto">
-					<v-btn @click="removeRow" color="error" :disabled="matrixSize <= 2">
+					<v-btn @click="removeRow" color="error" :disabled="rowSize <= 2">
 						<v-icon>mdi-minus</v-icon>
+						row
+					</v-btn>
+				</v-col>
+				<v-col cols="auto">
+					<v-btn @click="addCol" color="success" :disabled="matrixSize >= 5">
+						<v-icon>mdi-plus</v-icon>
+						col
+					</v-btn>
+				</v-col>
+				<v-col cols="auto">
+					<v-btn @click="removeCol" color="error" :disabled="matrixSize <= 2">
+						<v-icon>mdi-minus</v-icon>
+						col
 					</v-btn>
 				</v-col>
 				<v-col cols="auto">
@@ -72,9 +77,7 @@
 				<v-divider class="mt-5"></v-divider>
 				<v-row justify="start" align="center" class="mt-4 mb-1 mx-3">
 					<span class="text-h5">Result: </span>
-					<span class="ml-3">
-						{{ result }}
-					</span>
+					<span class="ml-3">{{ result }}</span>
 				</v-row>
 			</div>
 		</v-card-text>
@@ -82,8 +85,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import methods from './../../services/methods.js';
+import methods from './../../../services/methods';
 
 export default {
 	data() {
@@ -91,17 +93,10 @@ export default {
 			matrixSize: 3,
 			matrixSizes: [2, 3, 4, 5],
 			matrixData: this.initializeMatrixData(3),
-			matrixB: Array.from({ length: 3 }, () => Array(1).fill('')), // Initialize with numeric values
+			matrixB: Array.from({ length: 3 }, () => Array(1).fill('')),
 			result: '',
+			rowSize: 3,
 		};
-	},
-	watch: {
-		matrixSize(e) {
-			this.matrixData = this.initializeMatrixData(e);
-			this.matrixB = Array.from({ length: this.matrixSize }, () =>
-				Array(1).fill('')
-			);
-		},
 	},
 	computed: {
 		matrix: {
@@ -114,22 +109,13 @@ export default {
 		},
 	},
 	methods: {
-		clearMatrix() {
-			this.matrixData = this.initializeMatrixData(this.matrixSize);
-			this.matrixB = Array.from({ length: this.matrixSize }, () =>
-				Array(1).fill()
-			);
-			this.matrixSize = 3;
-			this.result = '';
-		},
 		initializeMatrixData(size) {
 			return Array.from({ length: size }, () => Array(size).fill(''));
 		},
 		addRow() {
 			this.matrix.push(Array(this.matrixSize).fill(''));
 			this.matrixB.push(Array(1).fill(''));
-			this.matrix.forEach(row => row.push());
-			this.matrixSize++;
+			this.rowSize++;
 		},
 		removeRow() {
 			if (this.matrix.length > 1) {
@@ -138,15 +124,30 @@ export default {
 			if (this.matrixB.length > 1) {
 				this.matrixB.pop();
 			}
+			this.rowSize--;
+		},
+		addCol() {
+			this.matrix.forEach(row => row.push(''));
+			this.matrixSize++;
+		},
+		removeCol() {
 			if (this.matrixSize > 1) {
 				this.matrix.forEach(row => row.pop());
 				this.matrixSize--;
 			}
 		},
-
+		clearMatrix() {
+            this.rowSize = 3
+            this.matrixSize = 3,
+			this.matrixData = this.initializeMatrixData(3);
+			this.matrixB = Array.from({ length: 3 }, () =>
+				Array(1).fill('')
+			);
+			this.result = '';
+		},
 		async submitMatrix() {
 			try {
-				this.result = await methods.gauss({
+				this.result = await methods.simpleItarations({
 					A: this.matrix.map(row => row.map(Number)),
 					b: this.matrixB.map(Number),
 				});
@@ -157,7 +158,3 @@ export default {
 	},
 };
 </script>
-
-<style scoped>
-/* Add styles as needed */
-</style>

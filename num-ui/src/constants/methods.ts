@@ -30,8 +30,8 @@ export const METHODS_ALL = {
 	SIMPLE_ITARATIONS: {
 		text: 'simple iterations',
 	},
-	NEWTON_LINEAR: {
-		text: 'newton linear',
+	LEAST_SQUARES: {
+		text: 'least squares',
 	},
 	CHORD: {
 		text: 'chord',
