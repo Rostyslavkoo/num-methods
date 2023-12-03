@@ -26,4 +26,8 @@ export default {
 		const response = await requestService.post('newton-inter', payload);
 		return response?.data;
 	},
+	async lagrange(payload) {
+		const response = await requestService.post('lagrange', payload);
+		return response?.data;
+	},
 };

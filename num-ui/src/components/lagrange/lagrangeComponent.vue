@@ -1,6 +1,6 @@
 <template>
 	<v-card>
-		<v-card-title> Newton Interpolation method </v-card-title>
+		<v-card-title> Lagrange method </v-card-title>
 		<v-divider class="mx-3"></v-divider>
 		<v-card-text>
 			<v-sheet :height="120 * rowSize" class="pl-1">
@@ -63,7 +63,7 @@
 					<v-btn btn @click="submitMatrix" :loading="loading" color="primary">Submit Matrix</v-btn>
 				</v-col>
 			</v-row>
-			<div v-if="result !== null">
+			<div v-if="result !== null ">
 				<v-divider class="mt-5"></v-divider>
 				<v-row justify="start" align="center" class="mt-4 mb-1 mx-3">
 					<span class="text-h5">Result: </span>
@@ -116,13 +116,12 @@ export default {
             this.rowSize = 3
             this.matrixSize = 2,
 			this.matrixData = this.initializeMatrixData(2);
-			this.result = null;
-            this.xQuery =''
+			this.result = '';
 		},
 		async submitMatrix() {
 			try {
 				this.loading = true
-				this.result = await methods.newtonInter({
+				this.result = await methods.lagrange({
 					matrix: this.matrix.map(row => row.map(Number)),
 					x:+this.xQuery
 				});

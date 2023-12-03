@@ -45,7 +45,7 @@
 					>
 				</v-col>
 			</v-row>
-			<div v-if="result">
+			<div v-if="result !== null">
 				<v-divider class="mt-5"></v-divider>
 				<v-row justify="start" align="center" class="mt-4 mb-1 mx-3">
 					<span class="text-h5">Result: </span>
@@ -65,7 +65,7 @@ export default {
 			functionQuery: '',
 			aQuery: '',
 			bQuery: '',
-			result: '',
+			result: null,
             loading:false
 		};
 	},
@@ -75,7 +75,7 @@ export default {
             this.functionQuery = ''
             this.aQuery = ''
             this.bQuery = ''
-            this.result = ''
+            this.result = null
 
         },  
 		async submitMatrix() {

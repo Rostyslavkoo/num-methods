@@ -273,3 +273,25 @@ async def newton_interpolation(NewtonInter:NewtonInter):
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+class Lagrange(BaseModel):
+    matrix: list
+    x:int
+
+@app.post("/lagrange")
+async def lagrange_polynomial(Lagrange:Lagrange):
+    try:
+        points = Lagrange.matrix
+        x = Lagrange.x
+        result = 0
+        size = len(points)
+        for i in range(size):
+            temp = 1
+            for j in range(size):
+                if i != j:
+                    temp *= (x - float(points[j][0])) / (float(points[i][0]) - float(points[j][0]))
+            result += temp * float(points[i][1])
+        
+        return result
+
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

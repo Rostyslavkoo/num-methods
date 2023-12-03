@@ -68,7 +68,7 @@
 					<v-btn btn @click="submitMatrix" :loading="loading" color="primary">Submit Matrix</v-btn>
 				</v-col>
 			</v-row>
-			<div v-if="result">
+			<div v-if="result !== null">
 				<v-divider class="mt-5"></v-divider>
 				<v-row justify="start" align="center" class="mt-4 mb-1 mx-3">
 					<span class="text-h5">Result: </span>
@@ -92,7 +92,7 @@ export default {
 			matrixSizes: [2, 3, 4, 5],
 			matrixData: this.initializeMatrixData(3),
 			matrixB: Array.from({ length: 3 }, () => Array(1).fill('')), // Initialize with numeric values
-			result: '',
+			result: null,
 			loading:false
 		};
 	},
@@ -121,7 +121,7 @@ export default {
 				Array(1).fill()
 			);
 			this.matrixSize = 3;
-			this.result = '';
+			this.result = null;
 		},
 		initializeMatrixData(size) {
 			return Array.from({ length: size }, () => Array(size).fill(''));

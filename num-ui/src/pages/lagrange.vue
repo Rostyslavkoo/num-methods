@@ -1,16 +1,15 @@
 <template>
-	<layout-component><gaus-component /></layout-component>
+	<layout-component><lagrange-component></lagrange-component></layout-component>
 </template>
 
 <script>
-import GausComponent from '../components/gaus/gausComponent.vue';
+import LagrangeComponent from '../components/lagrange/lagrangeComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
 
 export default {
-	components: { layoutComponent, GausComponent },
+	components: { layoutComponent, LagrangeComponent },
 };
 
-GausComponent;
 </script>
 
 <style></style>
