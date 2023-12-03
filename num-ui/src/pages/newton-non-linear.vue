@@ -1,16 +1,16 @@
 <template>
-	<layout-component><gaus-component /></layout-component>
+	<layout-component
+		><newton-non-linear-component></newton-non-linear-component
+	></layout-component>
 </template>
 
 <script>
-import GausComponent from '../components/gaus/gausComponent.vue';
 import layoutComponent from '../components/layout/layoutComponent.vue';
+import NewtonNonLinearComponent from '../components/newtonNonLinear/newtonNonLinearComponent.vue';
 
 export default {
-	components: { layoutComponent, GausComponent },
+	components: { layoutComponent, NewtonNonLinearComponent },
 };
-
-GausComponent;
 </script>
 
 <style></style>

@@ -18,4 +18,8 @@ export default {
 		const response = await requestService.post('chord', payload);
 		return response?.data;
 	},
+	async newton(payload) {
+		const response = await requestService.post('newton', payload);
+		return response?.data;
+	},
 };
