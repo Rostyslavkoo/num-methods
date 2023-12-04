@@ -1,6 +1,6 @@
 <template>
 	<v-card>
-		<v-card-title> Newton method </v-card-title>
+		<v-card-title> Integral method </v-card-title>
 		<v-divider class="mx-3"></v-divider>
 		<v-card-text>
 			<v-sheet height="100" class="pl-1">
@@ -56,7 +56,13 @@
 				<v-divider class="mt-5"></v-divider>
 				<v-row justify="start" align="center" class="mt-4 mb-1 mx-3">
 					<span class="text-h5">Result: </span>
-					<span class="ml-3">{{ result }}</span>
+					
+					<div v-if="'result_rectangles' in result">
+						<v-col> Rectangles: {{ result.result_rectangles }} </v-col>
+						<v-col> Trapezium: {{ result.result_trapezium }} </v-col>
+						<v-col> Simpsons: {{ result.result_simpsons }} </v-col>
+					</div>
+					<span class="ml-3" v-else>{{ result }}</span>
 				</v-row>
 			</div>
 		</v-card-text>
@@ -70,9 +76,9 @@ export default {
 	data() {
 		return {
 			functionQuery: 'x**3-13*x-1',
-            aQuery:'',
-            bQuery:'',
-            nQuery:'',
+			aQuery: '',
+			bQuery: '',
+			nQuery: '',
 			result: undefined,
 			loading: false,
 		};
@@ -82,18 +88,18 @@ export default {
 		clearMatrix() {
 			this.functionQuery = '';
 			this.result = undefined;
-            this.aQuery = ''
-            this.bQuery = ''
-            this.nQuery = ''
+			this.aQuery = '';
+			this.bQuery = '';
+			this.nQuery = '';
 		},
 		async submitMatrix() {
 			try {
 				this.loading = true;
 				this.result = await methods.integral({
 					function: this.functionQuery,
-                    a:this.aQuery,
-                    b:this.bQuery,
-                    n:this.nQuery,
+					a: this.aQuery,
+					b: this.bQuery,
+					n: this.nQuery,
 				});
 			} catch (e) {
 				this.result = e?.response?.data?.detail;
