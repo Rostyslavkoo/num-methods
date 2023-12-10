@@ -23,7 +23,7 @@ export default {
 		return response?.data;
 	},
 	async newtonInter(payload) {
-		const response = await requestService.post('newton-inter', payload);
+		const response = await requestService.post('lagrange', payload);
 		return response?.data;
 	},
 	async lagrange(payload) {

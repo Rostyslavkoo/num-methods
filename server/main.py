@@ -140,46 +140,89 @@ def solve_iteration_method(item: Item):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     
+
+def determinant(matrix):
+    n = len(matrix)
+    if n == 1:
+        return matrix[0][0]
+    if n == 2:
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+
+    det = 0
+    for i in range(n):
+        det += ((-1) ** i) * matrix[0][i] * determinant(minor(matrix, 0, i))
+
+    return det
+
+def minor(matrix, row, col):
+    return [[matrix[i][j] for j in range(len(matrix[i])) if j != col] for i in range(len(matrix)) if i != row]
+
+def cofactor(matrix):
+    return [[((-1) ** (i + j)) * determinant(minor(matrix, i, j)) for j in range(len(matrix[i]))] for i in range(len(matrix))]
+
+def transpose(matrix):
+    return [[matrix[j][i] for j in range(len(matrix))] for i in range(len(matrix[0]))]
+
+def invertible_matrix(matrix):
+    det = determinant(matrix)
+    if det == 0:
+        raise ValueError("Matrix is not invertible")
+
+    cofactor_matrix = cofactor(matrix)
+    adjugate_matrix = transpose(cofactor_matrix)
+
+    inverse_matrix = [[adjugate_matrix[i][j] / det for j in range(len(adjugate_matrix[i]))] for i in range(len(adjugate_matrix))]
+
+    return inverse_matrix
+
+
 @app.post("/least-squares/") 
-def solve_least_squares_for_system(item: Item):
+def least_squares_method(item: Item):
     try:
         A = item.A
         b = item.b
         size = len(A)
         size2 = len(A[0])
-        
-        matrix = [[float(A[i][j]) for j in range(size2)] for i in range(size)]
+
+        matrix = [
+            [float(A[i][j]) for j in range(size2)] for i in range(size)
+        ]
+
         constants = [float(b[i]) for i in range(size)]
+
+        if any(all(value == 0 for value in row) for row in matrix):
+            raise HTTPException(status_code=400, detail="Матриця містить нулі. Спробуйте ще раз!")
 
         matrix_transpose = [[matrix[j][i] for j in range(size)] for i in range(size2)]
 
-        matrix_transpose_by_matrix = [[0 for _ in range(size2)] for _ in range(size2)]
-        for i in range(size2):
-            for j in range(size2):
-                for k in range(size):
+        matrix_transpose_by_matrix = [[0 for _ in range(size)] for _ in range(size)]
+        for i in range(size):
+            for j in range(size):
+                for k in range(size2):
                     matrix_transpose_by_matrix[i][j] += matrix_transpose[i][k] * matrix[k][j]
 
-        for i in range(size2):
-            if matrix_transpose_by_matrix[i][i] != 0:
-                matrix_transpose_by_matrix_invertible = invertible_matrix(matrix_transpose_by_matrix)
-            else:
-                raise HTTPException(status_code=400, detail="Matrix is not invertible")
+        matrix_transpose_by_matrix_invertible = invertible_matrix(matrix_transpose_by_matrix)
 
-        matrix_transpose_by_constants = [0 for _ in range(size2)]
-        for i in range(size2):
-            for j in range(size):
+        if not matrix_transpose_by_matrix_invertible:
+            raise HTTPException(status_code=400, detail="Матриця не може бути оберненою. Спробуйте ще раз!")
+
+        matrix_transpose_by_constants = [0 for _ in range(size)]
+        for i in range(size):
+            for j in range(size2):
                 matrix_transpose_by_constants[i] += matrix_transpose[i][j] * constants[j]
 
-        result = [0 for _ in range(size2)]
-        for i in range(size2):
-            for j in range(size2):
+        result = [0 for _ in range(size)]
+        for i in range(size):
+            for j in range(size):
                 result[i] += matrix_transpose_by_matrix_invertible[i][j] * matrix_transpose_by_constants[j]
 
-        result = [round(result[i], 7) for i in range(size2)]
+        result = [round(result[i], 7) for i in range(size)]
 
         return result
 
-    except (ValueError, IndexError) as e:
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 class ChordModel(BaseModel):
@@ -255,15 +298,15 @@ def solve_newton(NewtonMethodInput:NewtonMethodInput):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-class NewtonInter(BaseModel):
+class er(BaseModel):
     matrix: list
     x:int
 
 @app.post("/newton-inter/") 
-async def newton_interpolation(NewtonInter:NewtonInter):
+async def newton_interpolation(er:er):
     try:
-        x = NewtonInter.x
-        D_matrix = NewtonInter.matrix
+        x = er.x
+        D_matrix = er.matrix
         
         result = 0
         size = len(D_matrix)
@@ -281,7 +324,7 @@ async def newton_interpolation(NewtonInter:NewtonInter):
         raise HTTPException(status_code=500, detail="Internal Server Error")
 class Lagrange(BaseModel):
     matrix: list
-    x:int
+    x:float
 
 @app.post("/lagrange")
 async def lagrange_polynomial(Lagrange:Lagrange):
